@@ -80,7 +80,54 @@ namespace DCH_CONVERT_POD
                 return dt;
             }
         }
-        public DataTable ReadExcel(string fileName, string fileExt)
+
+        private DataTable AddColumnDatatable_TRAN()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                dt.Columns.Add("CO");
+                dt.Columns.Add("Doc_T");
+                dt.Columns.Add("Doc_N");
+                dt.Columns.Add("Trn_D");
+                dt.Columns.Add("Act_C");
+                dt.Columns.Add("Sys_D");
+                dt.Columns.Add("F_Dep");
+                dt.Columns.Add("T_Dep");
+                dt.Columns.Add("Doc_C");
+                dt.Columns.Add("Rea_C");
+                dt.Columns.Add("Rem");
+                dt.Columns.Add("Pay_T");
+                dt.Columns.Add("Date2");
+                dt.Columns.Add("Fdate");
+                dt.Columns.Add("Tdate");
+                dt.Columns.Add("Pay_Amt");
+                dt.Columns.Add("Import_D");
+ 
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return dt;
+            }
+        }
+
+        private DataTable AddColumnDatatable_AMT()
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                dt.Columns.Add("Doc_T");
+                dt.Columns.Add("Doc_N");
+                dt.Columns.Add("O_Amt");
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                return dt;
+            }
+        }
+        public DataTable ReadExcel(string fileName, string fileExt, string sPrefix)
         {
             DataTable dtexcel = new DataTable();
             DataTable dt = new DataTable();
@@ -101,36 +148,91 @@ namespace DCH_CONVERT_POD
                     {
 
                         OleDbDataAdapter oleAdpt = new OleDbDataAdapter("select * from [Sheet1$]", con); //here we read data from sheet1  
+                        dtexcel = new DataTable();
                         oleAdpt.Fill(dtexcel); //fill excel data into dataTable  
                         dt = new DataTable();
-                        dt = AddColumnDatatable();
-                        for (int i = 1; i < dtexcel.Rows.Count; i++)
+                        if (sPrefix.ToUpper() == "ITF-POD-HEAD")
                         {
-                            DataRow dr = dt.NewRow();
-                            dr["CO"] = dtexcel.Rows[i]["F1"].ToString();
-                            dr["Doc_T"] = dtexcel.Rows[i]["F2"].ToString();
-                            dr["Doc_N"] = dtexcel.Rows[i]["F3"].ToString();
-                            dr["Inv_D"] = dtexcel.Rows[i]["F4"].ToString();
-                            dr["Due_D"] = dtexcel.Rows[i]["F5"].ToString();
-                            dr["Cust"] = dtexcel.Rows[i]["F6"].ToString();
-                            dr["Ord_T"] = dtexcel.Rows[i]["F7"].ToString();
-                            dr["Ord_N"] = dtexcel.Rows[i]["F8"].ToString();
-                            dr["BP"] = dtexcel.Rows[i]["F9"].ToString();
-                            dr["Ref"] = dtexcel.Rows[i]["F10"].ToString();
-                            dr["Sls"] = dtexcel.Rows[i]["F11"].ToString();
-                            dr["C08"] = dtexcel.Rows[i]["F12"].ToString();
-                            dr["Term"] = dtexcel.Rows[i]["F13"].ToString();
-                            dr["Net"] = dtexcel.Rows[i]["F14"].ToString();
-                            dr["Amt_E"] = dtexcel.Rows[i]["F15"].ToString();
-                            dr["VAT"] = dtexcel.Rows[i]["F16"].ToString();
-                            dr["Amt_I"] = dtexcel.Rows[i]["F17"].ToString();
-                            dr["O_Amt"] = dtexcel.Rows[i]["F18"].ToString();
-                            dr["Actl_D"] = dtexcel.Rows[i]["F19"].ToString();
-                            dr["Rcpt_D"] = dtexcel.Rows[i]["F20"].ToString();
-                            dr["Import_D"] = dtexcel.Rows[i]["F21"].ToString();
+                            dt = AddColumnDatatable();
+                            for (int i = 1; i < dtexcel.Rows.Count; i++)
+                            {
+                                DataRow dr = dt.NewRow();
+                                dr["CO"] = dtexcel.Rows[i]["F1"].ToString();
+                                dr["Doc_T"] = dtexcel.Rows[i]["F2"].ToString();
+                                dr["Doc_N"] = dtexcel.Rows[i]["F3"].ToString();
+                                dr["Inv_D"] = dtexcel.Rows[i]["F4"].ToString();
+                                dr["Due_D"] = dtexcel.Rows[i]["F5"].ToString();
+                                dr["Cust"] = dtexcel.Rows[i]["F6"].ToString();
+                                dr["Ord_T"] = dtexcel.Rows[i]["F7"].ToString();
+                                dr["Ord_N"] = dtexcel.Rows[i]["F8"].ToString();
+                                dr["BP"] = dtexcel.Rows[i]["F9"].ToString();
+                                dr["Ref"] = dtexcel.Rows[i]["F10"].ToString();
+                                dr["Sls"] = dtexcel.Rows[i]["F11"].ToString();
+                                dr["C08"] = dtexcel.Rows[i]["F12"].ToString();
+                                dr["Term"] = dtexcel.Rows[i]["F13"].ToString();
+                                dr["Net"] = dtexcel.Rows[i]["F14"].ToString();
+                                dr["Amt_E"] = dtexcel.Rows[i]["F15"].ToString();
+                                dr["VAT"] = dtexcel.Rows[i]["F16"].ToString();
+                                dr["Amt_I"] = dtexcel.Rows[i]["F17"].ToString();
+                                dr["O_Amt"] = dtexcel.Rows[i]["F18"].ToString();
+                                dr["Actl_D"] = dtexcel.Rows[i]["F19"].ToString();
+                                dr["Rcpt_D"] = dtexcel.Rows[i]["F20"].ToString();
+                                dr["Import_D"] = dtexcel.Rows[i]["F21"].ToString();
 
-                            dt.Rows.Add(dr);
+                                dt.Rows.Add(dr);
+                            }
                         }
+                        else
+                        {
+                            if (sPrefix.ToUpper() == "ITF-POD-TRAN")
+                            {
+                                dt = AddColumnDatatable_TRAN();
+                                for (int i = 1; i < dtexcel.Rows.Count; i++)
+                                {
+                                  
+                                    DataRow dr = dt.NewRow();
+                                    dr["CO"] = dtexcel.Rows[i]["F1"].ToString();
+                                    dr["Doc_T"] = dtexcel.Rows[i]["F2"].ToString();
+                                    dr["Doc_N"] = dtexcel.Rows[i]["F3"].ToString();
+                                    dr["Trn_D"] = dtexcel.Rows[i]["F4"].ToString();
+                                    dr["Act_C"] = dtexcel.Rows[i]["F5"].ToString();
+                                    dr["Sys_D"] = dtexcel.Rows[i]["F6"].ToString();
+                                    dr["F_Dep"] = dtexcel.Rows[i]["F7"].ToString();
+                                    dr["T_Dep"] = dtexcel.Rows[i]["F8"].ToString();
+                                    dr["Doc_C"] = dtexcel.Rows[i]["F9"].ToString();
+                                    dr["Rea_C"] = dtexcel.Rows[i]["F10"].ToString();
+                                    dr["Rem"] = dtexcel.Rows[i]["F11"].ToString();
+                                    dr["Pay_T"] = dtexcel.Rows[i]["F12"].ToString();
+                                    dr["Date2"] = dtexcel.Rows[i]["F13"].ToString();
+                                    dr["Fdate"] = dtexcel.Rows[i]["F14"].ToString();
+                                    dr["Tdate"] = dtexcel.Rows[i]["F15"].ToString();
+                                    dr["Pay_Amt"] = dtexcel.Rows[i]["F16"].ToString();
+                                    dr["Import_D"] = dtexcel.Rows[i]["F17"].ToString();
+                                    
+
+                                    dt.Rows.Add(dr);
+                                }
+                            }
+                            else
+                            {
+                                if (sPrefix.ToUpper() == "ITF-UPDO-AMT")
+                                {
+                                    dt = AddColumnDatatable_AMT();
+                                    for (int i = 1; i < dtexcel.Rows.Count; i++)
+                                    {
+                                        DataRow dr = dt.NewRow();
+                                        dr["Doc_T"] = dtexcel.Rows[i]["F1"].ToString();
+                                        dr["Doc_N"] = dtexcel.Rows[i]["F2"].ToString();
+                                        dr["O_Amt"] = dtexcel.Rows[i]["F3"].ToString();
+
+
+                                        dt.Rows.Add(dr);
+                                    }
+                                }
+                            }
+                        }
+
+                       
                     }
                     catch (Exception ex)
                     {
@@ -203,12 +305,68 @@ namespace DCH_CONVERT_POD
             string PATH_BAK = System.Configuration.ConfigurationSettings.AppSettings["PATH_BAK"].ToString();
             DataTable dt_output = new DataTable();
             StringBuilder result = new StringBuilder();
+            string HEAD = System.Configuration.ConfigurationSettings.AppSettings["HEAD"].ToString();
+            string TRAN = System.Configuration.ConfigurationSettings.AppSettings["TRAN"].ToString();
+            string sAMT = System.Configuration.ConfigurationSettings.AppSettings["AMT"].ToString();
             try
             {
-                foreach (string filepath in Directory.GetFiles(PATH_SOURCE,"*.xlsx"))
+                // Header
+                foreach (string filepath in Directory.GetFiles(PATH_SOURCE, HEAD + "*.xlsx"))
                 {
                     dt_output = new DataTable();
-                    dt_output = ReadExcel(filepath, ".xlsx");
+                    dt_output = ReadExcel(filepath, ".xlsx", HEAD);
+                    #region Create Text file
+                    string FileName = Path.GetFileNameWithoutExtension(filepath);
+                    WriteDataToFile(dt_output, PATH_TARGET + @"\\" + FileName + ".txt");
+                    #endregion
+
+                    #region Move File
+                    string result_Move;
+                    result_Move = Path.GetFileName(filepath);
+
+                    string sPath_bak = PATH_BAK + "/" + DateTime.Now.ToString("yyyyMMdd");
+                    bool exists = System.IO.Directory.Exists(sPath_bak);
+                    if (!exists)
+                    {
+                        System.IO.Directory.CreateDirectory(sPath_bak);
+                    }
+
+                    System.IO.File.Move(PATH_SOURCE + "/" + result_Move, sPath_bak + "/" + DateTime.Now.ToString("yyyyMMddhhmmss", (new System.Globalization.CultureInfo("en-US"))) + "_" + result_Move);
+                    #endregion
+                    System.Threading.Thread.Sleep(1000);
+                }
+
+                // Transaction
+                foreach (string filepath in Directory.GetFiles(PATH_SOURCE, TRAN + "*.xlsx"))
+                {
+                    dt_output = new DataTable();
+                    dt_output = ReadExcel(filepath, ".xlsx", TRAN);
+                    #region Create Text file
+                    string FileName = Path.GetFileNameWithoutExtension(filepath);
+                    WriteDataToFile(dt_output, PATH_TARGET + @"\\" + FileName + ".txt");
+                    #endregion
+
+                    #region Move File
+                    string result_Move;
+                    result_Move = Path.GetFileName(filepath);
+
+                    string sPath_bak = PATH_BAK + "/" + DateTime.Now.ToString("yyyyMMdd");
+                    bool exists = System.IO.Directory.Exists(sPath_bak);
+                    if (!exists)
+                    {
+                        System.IO.Directory.CreateDirectory(sPath_bak);
+                    }
+
+                    System.IO.File.Move(PATH_SOURCE + "/" + result_Move, sPath_bak + "/" + DateTime.Now.ToString("yyyyMMddhhmmss", (new System.Globalization.CultureInfo("en-US"))) + "_" + result_Move);
+                    #endregion
+                    System.Threading.Thread.Sleep(1000);
+                }
+
+                // AMT
+                foreach (string filepath in Directory.GetFiles(PATH_SOURCE, sAMT + "*.xlsx"))
+                {
+                    dt_output = new DataTable();
+                    dt_output = ReadExcel(filepath, ".xlsx", sAMT);
                     #region Create Text file
                     string FileName = Path.GetFileNameWithoutExtension(filepath);
                     WriteDataToFile(dt_output, PATH_TARGET + @"\\" + FileName + ".txt");

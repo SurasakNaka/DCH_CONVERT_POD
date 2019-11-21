@@ -305,6 +305,7 @@ namespace DCH_CONVERT_POD
                     catch (Exception ex)
                     {
                         sError = ex.Message.ToString();
+                        //MessageBox.Show(sError);
                         bResult = false;
                         return dt;
                     }
